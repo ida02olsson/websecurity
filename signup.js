@@ -2,7 +2,14 @@ function signup() {
     var username = document.getElementById("username").value;
     var address = document.getElementById("address").value;
     var password = document.getElementById("password").value;
+    var confirm = document.getElementById("confirm-pasword").value;
 
+    if (password != confirm) {
+        document.getElementById("password").value = "";
+        document.getElementById("confirm-pasword").value = "";
+        alert("Passwords do not match!");
+        return;
+    }
     // Send data to server.php using AJAX
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "signup.php", true);
@@ -13,7 +20,5 @@ function signup() {
         }
     };
     console.log("username=" + username);
-    xhr.send("username=" + username);
-    xhr.send("address=" + address);
-    xhr.send("password=" + password);
+    xhr.send("username=" + username + "&address=" + address + "&password=" + password);
 }

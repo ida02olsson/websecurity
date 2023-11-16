@@ -6,6 +6,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Process the data (e.g., save to a database)
     // For simplicity, we'll just echo the name in this example.
-    echo "Hello, $username! Your data has been received., $address, $password";
+    echo "<div>Hello, $username! Your data has been received $address, $password</div>";
 }
 ?>

@@ -20,7 +20,7 @@ function signup() {
         return;
     }
 
-    if (validPassword(password)) {
+    if (invalidPassword(password)) {
         alert('not a valid password, must contain 8 characters, upper and lower case and at least one number');
         return;
     }
@@ -59,18 +59,22 @@ crypto.subtle
       hexes.push(('00000000' + view.getUint32(i).toString(16)).slice(-8));
     return hexes.join('');
   });
-
+ 
 hashValue(password).then(console.log);
 
-function validPassword(password) {
-    const re = new RegExp("(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}");
+function invalidPassword(password) {
+    const re = new RegExp("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[A-Z])(?=.*[a-z]).{8,}$");
+    console.log(re.test(password));
     return !re.test(password);
 }
 
 function common_passwords(password) {
     const re = new RegExp("^([pP]assword)");
     console.log(re.test(password));
-    return !re.test(password);
+    
+    var includes_password = re.test(password);
+    var includes_common = common_passwords_list.includes(password.toLowerCase());
+    return includes_password || includes_common;
 }
 
 

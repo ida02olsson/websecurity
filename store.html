@@ -1,9 +1,3 @@
-<!-- Lade till denna --> 
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,8 +7,6 @@
 
     <link rel="stylesheet" href="store.css">
     <script src="store.js"></script>
-
-
 </head>
 <body>
     <h2>Items</h2>
@@ -23,32 +15,42 @@
         <li>
             <img src="image1.jpg" alt="Image 1">
             <div class="itemText">Blå ring</div>
-            <h4>add to cart</h4>
-
+            <button onclick="addToCart('Blå ring')">Add to Cart</button>
         </li>
         <li>
             <img src="image2.jpg" alt="Image 2">
             <div class="itemText">Gul ring</div>
-            <h4>add to cart</h4>
-
+            <button onclick="addToCart('Gul ring')">Add to Cart</button>
         </li>
         <li>
             <img src="image3.jpg" alt="Image 3">
             <div class="itemText">Grön ring</div>
-            <h4>add to cart</h4>
-
+            <button onclick="addToCart('Grön ring')">Add to Cart</button>
         </li>
         <li>
             <img src="image4.jpg" alt="Image 4">
             <div class="itemText">Röd ring</div>
-            <h4>add to cart</h4>
-
+            <button onclick="addToCart('Röd ring')">Add to Cart</button>
+        </li>
+        <li>
+            <img src="image5.jpg" alt="Image 5">
+            <div class="itemText">Orange ring span <span></span></div>
+            <button onclick="addToCart('Orange ring')">Add to Cart</button>
         </li>
     </ul>
 
-    <h4>add to cart</h4>
-    <h2>add to cart</h2>
-    <h2>link to chart</h2>
+    <h2>Shopping Cart</h2>
+    <ul id="shoppingCart"></ul>
 
+    <script>
+        function addToCart(productName) {
+            // You can implement the logic to add the product to the shopping cart
+            // For simplicity, let's just append the product name to the shopping cart list
+            var shoppingCartList = document.getElementById('shoppingCart');
+            var listItem = document.createElement('li');
+            listItem.textContent = productName;
+            shoppingCartList.appendChild(listItem);
+        }
+    </script>
 </body>
 </html>

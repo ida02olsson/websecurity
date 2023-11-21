@@ -11,5 +11,6 @@ function submitForm() {
             document.getElementById("response").innerHTML = xhr.responseText;
         }
     };
+    console.log("name=" + name);
     xhr.send("name=" + name);
 }

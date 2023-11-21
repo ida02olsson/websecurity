@@ -1,22 +1,30 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Website</title>
+    <title>Login Page</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to our website!</h1>
+        <h1>Login</h1>
         <p id="response"></p>
-        <form id="myForm">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            <button type="button" onclick="submitForm()">Submit</button>
+        <form id="loginForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="button" onclick="submitForm(); location.href='store.html'">Login</button> <!-- Lade till location.href='store.html'  --> 
+
         </form>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
+
+<!-- http://localhost/websecurity -->
+<!-- "C:\xampp\htdocs\websecurity" -->

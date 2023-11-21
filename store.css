@@ -1,0 +1,32 @@
+.itemPics {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 15%;
+  list-style: none;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.itemPics li {
+  width: 30%;
+  margin: 10px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.itemPics img {
+  width: 100%;
+}
+
+#payButton {
+  display: block;
+  margin: 20px auto;
+  align-items: center;
+}
+
+
+.whole {
+  background-color: red;
+  background-image: linear-gradient(to bottom right, rgb(246, 118, 118), rgb(236, 255, 63), rgb(168, 68, 239));
+}
+

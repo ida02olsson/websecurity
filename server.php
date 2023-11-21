@@ -1,9 +1,19 @@
+
 <?php
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $name = $_POST["name"];
+    $username = $_POST["username"];
+    $password = $_POST["password"];
 
-    // Process the data (e.g., save to a database)
-    // For simplicity, we'll just echo the name in this example.
-    echo "Hello, $name! Your data has been received.";
+    // Hardcoded username and password (for demonstration purposes)
+    $validUsername = "demo_user";
+    $validPassword = "demo_pass";
+
+    // Check if the provided credentials are valid
+    if ($username === $validUsername && $password === $validPassword) {
+        echo "Login successful. Welcome, $username!";
+    } else {
+        echo "Invalid username or password. Please try again.";
+    }
 }
 ?>
+

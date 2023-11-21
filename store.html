@@ -5,50 +5,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Store</title>
-
     <link rel="stylesheet" href="store.css">
     <script src="store.js"></script>
 </head>
 
 <body>
-    <h2>Items</h2>
 
-    <ul class="itemPics">
-        <li>
-            <img src="blue.jpg" alt="Image 1">
-            <div class="itemText">Blå ring, 100kr</div>
-            <button onclick="addToCart('Blå ring')">Add to Cart</button>
+    <h1>Cool Rings company</h1>
+
+    <h2>Rings with cool colors</h2>
+
+    <div class="whole">
+
+        
+        <ul class="itemPics">
+            <li>
+                <img src="blue.jpg" alt="Image 1">
+            <div class="itemText">Blue ring, 100kr</div>
+            <button style="background-color: #8bb9dc; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;" onclick="addToCart('Blue')">Add to Cart</button>
         </li>
         <li>
             <img src="yellow.jpg" alt="Image 2">
-            <div class="itemText">Gul ring, 200kr</div>
-            <button onclick="addToCart('Gul ring')">Add to Cart</button>
+            <div class="itemText">Yellow ring, 200kr</div>
+            <button style="background-color: rgb(223, 183, 50); /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;" onclick="addToCart('Yellow')">Add to Cart</button>
         </li>
         <li>
             <img src="green.jpg" alt="Image 3">
-            <div class="itemText">Grön ring, 300kr</div>
-            <button onclick="addToCart('Grön ring')">Add to Cart</button>
+            <div class="itemText">Green ring, 300kr</div>
+            <button style="background-color: #5a975c; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;" onclick="addToCart('Green')">Add to Cart</button>
         </li>
         <li>
             <img src="red.jpg" alt="Image 4">
-            <div class="itemText">Röd ring, 400kr</div>
-            <button onclick="addToCart('Röd ring')">Add to Cart</button>
+            <div class="itemText">Red ring, 400kr</div>
+            <button style="background-color: rgb(225, 55, 55); /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;" onclick="addToCart('Red')">Add to Cart</button>
         </li>
         <li>
             <img src="orange.jpg" alt="Image 5">
             <div class="itemText">Orange ring, 500kr</div>
-            <button onclick="addToCart('Orange ring')">Add to Cart</button>
+            <button style="background-color: rgb(219, 104, 32); /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;" onclick="addToCart('Orange')">Add to Cart</button>
         </li>
     </ul>
-
-    <h2>link to cart</h2>
-
+    
+    <h2>Shopping Cart</h2>
+    <ul id="shoppingCart"></ul>
+    
     <div>
-        <h5>Total cost: <span id="totalCost">0kr</span></h5>
+        <h3>Total cost: <span id="totalCost">0kr</span></h3>
     </div>
 
-    <a href="Reciept.html" target="_blank"><button id="payButton">Pay</button></a>
+    <button id="payButton" onclick="pay()" style="background: linear-gradient(to bottom right, red, blue); 
+    border: none; 
+    color: white; 
+    padding: 15px 32px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px; 
+    margin: 4px 2px; 
+    cursor: pointer;">Pay</button>
 
+
+</div>
 
 </body>
 

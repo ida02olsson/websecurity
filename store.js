@@ -2,24 +2,26 @@
 // Using an object to store the quantity of each item in the cart
 var cartItems = {};
 var itemPrices = {
-  'Blå ring': 100,
-  'Gul ring': 200,
-  'Grön ring': 300,
-  'Röd ring': 400,
-  'Orange ring': 500
+  'Blue': 100,
+  'Yellow': 200,
+  'Green': 300,
+  'Red': 400,
+  'Orange': 500
 };
 
 // Load cart from cookie when the page loads
-window.onload = function () {
+document.addEventListener('DOMContentLoaded', function () {
   loadCartFromCookie();
-};
+});
 
 function addToCart(productName) {
-  // Check if the item is already in the cart
-  if (cartItems[productName]) {
-    cartItems[productName]++;
+  console.log('Adding to cart:', productName); // debugg
+  var formattedProductName = productName.replace(/\s/g, '_');
+
+  if (cartItems[formattedProductName]) {
+    cartItems[formattedProductName]++;
   } else {
-    cartItems[productName] = 1;
+    cartItems[formattedProductName] = 1;
   }
 
   updateCartDisplay();
@@ -31,6 +33,12 @@ function updateCartDisplay() {
   var totalCostElement = document.getElementById('totalCost');
   var totalCost = 0;
 
+  // Check if shoppingCartList is null or undefined
+  if (!shoppingCartList) {
+    console.error('Error: shoppingCartList is null or undefined.');
+    return;
+  }
+
   // Clear the existing list
   shoppingCartList.innerHTML = '';
 
@@ -39,7 +47,6 @@ function updateCartDisplay() {
     var listItem = document.createElement('li');
     listItem.textContent = cartItems[item] + 'x ' + item;
 
-    // Add increment and decrement buttons
     var decrementButton = createButton('-', item);
     var incrementButton = createButton('+', item);
 
@@ -48,7 +55,6 @@ function updateCartDisplay() {
 
     shoppingCartList.appendChild(listItem);
 
-    // Calculate total cost
     totalCost += cartItems[item] * itemPrices[item];
   }
 
@@ -56,7 +62,6 @@ function updateCartDisplay() {
   totalCostElement.textContent = totalCost + 'kr';
 }
 
-// Function to create +/- buttons with correct item information
 function createButton(text, item) {
   var button = document.createElement('button');
   button.textContent = text;
@@ -67,7 +72,7 @@ function createButton(text, item) {
         cartItems[item]--;
       }
       if (cartItems[item] === 0) {
-        delete cartItems[item]; // Remove item if quantity is 0
+        delete cartItems[item];
       }
       updateCartDisplay();
       saveCartToCookie();
@@ -77,18 +82,17 @@ function createButton(text, item) {
       cartItems[item]++;
       updateCartDisplay();
       saveCartToCookie();
-    }
-  };
+    };
+  }
+
   return button;
 }
 
-// Function to save the cart to a cookie
 function saveCartToCookie() {
   var cartJSON = JSON.stringify(cartItems);
   document.cookie = "shoppingCart=" + cartJSON + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
 }
 
-// Function to load the cart from a cookie
 function loadCartFromCookie() {
   var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)shoppingCart\s*=\s*([^;]*).*$)|^.*$/, "$1");
   if (cookieValue) {
@@ -97,51 +101,41 @@ function loadCartFromCookie() {
   }
 }
 
-// Function to handle payment and generate a receipt
 function pay() {
-  // Create a receipt content
   var receiptContent = generateReceiptContent();
-
-  // Open a new tab with the receipt
   var receiptTab = window.open();
   receiptTab.document.write(receiptContent);
 
-  // Clear the cart after payment
   cartItems = {};
   updateCartDisplay();
   saveCartToCookie();
 }
 
-// Function to generate receipt content
 function generateReceiptContent() {
   var receiptContent = '<html><head><title>Receipt</title></head><body>';
 
-  // Add store name
-  receiptContent += '<h2>Store Name</h2>';
-
-  // Add items and details
+  receiptContent += '<h1>Cool Rings Company</h1>';
   receiptContent += '<h3>Receipt</h3>';
   receiptContent += '<ul>';
+
   for (var item in cartItems) {
-    var itemName = item;
+    var itemName = item.replace(/_/g, ' ');
     var itemQuantity = cartItems[item];
     var itemPrice = itemPrices[item];
     var itemTotal = itemQuantity * itemPrice;
 
     receiptContent += `<li>${itemName}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`;
   }
+
   receiptContent += '</ul>';
 
-  // Add total cost
   var totalCostElement = document.getElementById('totalCost');
   var totalCost = parseInt(totalCostElement.textContent);
   receiptContent += `<h4>Total Cost: ${totalCost}kr</h4>`;
 
-  // Add current time
   var currentTime = new Date().toLocaleString();
   receiptContent += `<p>Time: ${currentTime}</p>`;
 
-  // Close the HTML content
   receiptContent += '</body></html>';
 
   return receiptContent;

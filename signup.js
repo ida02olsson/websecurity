@@ -2,7 +2,7 @@ function signup() {
     var username = document.getElementById("username").value;
     var address = document.getElementById("address").value;
     var password = document.getElementById("password").value;
-    var securePassword = hashvalue(password);
+    var securePassword = hashValue(password);
     var confirm = document.getElementById("confirm-pasword").value;
 
     if (password != confirm) {
@@ -11,6 +11,12 @@ function signup() {
         alert("Passwords do not match!");
         return;
     }
+
+    if (validPassword(password)) {
+        console.log('not a valid password, must contain 8 characters, upper and lower case and at least one number');
+        return;
+    }
+
     // Send data to server.php using AJAX
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "signup.php", true);
@@ -36,3 +42,11 @@ crypto.subtle
   });
 
 hashValue(password).then(console.log);
+
+function validPassword(password) {
+    const re = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$");
+    return re.test(password);
+}
+
+
+

@@ -1,0 +1,17 @@
+.itemPics {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 15%;
+  padding-right: 15%;
+}
+
+.itemPics img {
+  width: 20%;
+}
+
+.test {
+    width: 200px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: orange;
+}

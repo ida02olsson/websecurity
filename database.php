@@ -33,26 +33,23 @@ if ($conn->query($sql) === TRUE) {
 $sql = "use Webshop;";
 $conn->query($sql);
 
+$sql = "DROP TABLE users;";
+$conn->query($sql);
+
 // Create table of users
 $sql = "CREATE TABLE users (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(30) NOT NULL,
-    address VARCHAR(30) NOT NULL,
-    password VARCHAR(30) NOT NULL,
-    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    username VARCHAR(100) NOT NULL,
+    address VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    reg_date VARCHAR(100) NOT NULL
     );";
 $conn->query($sql);
 
 // Check if user exists
-$username = "admin";
-$user_exists = validate($username, $conn);
 
-if ($user_exists) {
-  echo "\n$username user already exists\n";
-  return;
-}
 // Add user to table
-$sql = "INSERT INTO users (username, address, password) VALUES ('admin', 'admin', 'admin');";
+$sql = "INSERT INTO users (username, address, password, reg_date) VALUES ('admin', 'admin', 'admin', 1000000);";
 
 
 if ($conn->query($sql) === TRUE) {

@@ -1,10 +1,18 @@
-function signup() {
-    var username = document.getElementById("username").value;
-    var address = document.getElementById("address").value;
-    var password = document.getElementById("password").value;
-    var securePassword = hashValue(password);
-    var confirm = document.getElementById("confirm-pasword").value;
+var username;
+var address;
+var register_date;
 
+var common_passwords_list = ['qwerty123', 'zaq12wsx', '1q2w3e4r', 'mamma123', 'hejsan123', 'abcd1234', 'sommar123', 'hejhej123'];
+
+function signup() {
+
+    username = document.getElementById("username").value;
+    address = document.getElementById("address").value;
+    var password = document.getElementById("password").value;
+    var confirm = document.getElementById("confirm-pasword").value;
+    register_date = Date.now();
+
+    // Check that passwords match
     if (password != confirm) {
         document.getElementById("password").value = "";
         document.getElementById("confirm-pasword").value = "";
@@ -13,9 +21,20 @@ function signup() {
     }
 
     if (validPassword(password)) {
-        console.log('not a valid password, must contain 8 characters, upper and lower case and at least one number');
+        alert('not a valid password, must contain 8 characters, upper and lower case and at least one number');
         return;
     }
+
+    if (common_passwords(password)) {
+        alert('not a valid password, too common of a password');
+        return;
+    }
+
+    console.log(password + register_date);
+    var securePassword = hashValue(password + register_date).then(sendToServer);
+}
+
+function sendToServer(securePassword) {
 
     // Send data to server.php using AJAX
     var xhr = new XMLHttpRequest();
@@ -27,7 +46,7 @@ function signup() {
         }
     };
     console.log("username=" + username);
-    xhr.send("username=" + username + "&address=" + address + "&password=" + securePassword);
+    xhr.send("username=" + username + "&address=" + address + "&password=" + securePassword + "&reg_date=" + register_date);
 }
 
 const hashValue = val =>
@@ -44,8 +63,14 @@ crypto.subtle
 hashValue(password).then(console.log);
 
 function validPassword(password) {
-    const re = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$");
-    return re.test(password);
+    const re = new RegExp("(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}");
+    return !re.test(password);
+}
+
+function common_passwords(password) {
+    const re = new RegExp("^([pP]assword)");
+    console.log(re.test(password));
+    return !re.test(password);
 }
 
 

@@ -6,6 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = $_POST["username"];
     $address = $_POST["address"];
     $password = $_POST["password"];
+    $reg_date = $_POST["reg_date"];
 
     // Validate the data
     $db = new dbconn();
@@ -18,11 +19,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         return;
     }
 
-    // Process the data (e.g., save to a database)
-    // For simplicity, we'll just echo the name in this example.
-    echo "<div>Hello, $username! Your data has been received $address, $password</div>";
-
-    add_user($username, $address, $password, $conn);
+    // Add the user to the database
+    add_user($username, $address, $password, $reg_date, $conn);
 }
 
 function validate($username, $conn){
@@ -39,10 +37,10 @@ function validate($username, $conn){
     return $result >= 1;
   }
 
-  function add_user($username, $address, $password, $conn){
-    $sql = "INSERT INTO users (username, address, password) VALUES (?, ?, ?);";
+  function add_user($username, $address, $password, $reg_date, $conn){
+    $sql = "INSERT INTO users (username, address, password, reg_date) VALUES (?, ?, ?, ?);";
     if($stmt = $conn->prepare($sql)) {
-      $stmt->bind_param("sss", $username, $address, $password);
+      $stmt->bind_param("ssss", $username, $address, $password, $reg_date);
       $stmt->execute();
       $stmt->close();
     }

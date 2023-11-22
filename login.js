@@ -59,6 +59,8 @@ function submitForm() {
     xhr.send("username=" + username + "&password=" + password);
 }
 
+module.exports = submitForm;
+
 function signup() {
     var username = document.getElementById("username").value;
 

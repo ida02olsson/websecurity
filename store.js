@@ -90,7 +90,9 @@ function createButton(text, item) {
 
 function saveCartToCookie() {
   var cartJSON = JSON.stringify(cartItems);
-  document.cookie = "shoppingCart=" + cartJSON + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
+  //document.cookie = "shoppingCart=" + cartJSON + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/"; /* cross-site scripting (xss) secure */
+  document.cookie = "shoppingCart=" + cartJSON + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/; secure"; /* cross-site scripting (xss) */
+
 }
 
 function loadCartFromCookie() {
@@ -119,12 +121,13 @@ function generateReceiptContent() {
   receiptContent += '<ul>';
 
   for (var item in cartItems) {
-    var itemName = item.replace(/_/g, ' ');
+    //var itemName = item.replace(/_/g, ' '); /* cross-site scripting (xss) secure */
     var itemQuantity = cartItems[item];
     var itemPrice = itemPrices[item];
     var itemTotal = itemQuantity * itemPrice;
 
-    receiptContent += `<li>${itemName}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`;
+    //receiptContent += `<li>${itemName}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`; /* cross-site scripting (xss) secure */
+    receiptContent += `<li>${item}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`; /* cross-site scripting (xss) */
   }
 
   receiptContent += '</ul>';

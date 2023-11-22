@@ -1,5 +1,5 @@
 // Import the function to be tested
-const updateCartDisplay = require('./store');
+const  updateCartDisplay  = require('./store');
 
 // Test for cross-site scripting attack
 test('Cross-Site Scripting (XSS) Attack Test', () => {

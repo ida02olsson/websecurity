@@ -61,6 +61,7 @@ function updateCartDisplay() {
   // Display total cost
   totalCostElement.textContent = totalCost + 'kr';
 }
+  module.exports = updateCartDisplay;
 
 function createButton(text, item) {
   var button = document.createElement('button');
@@ -92,7 +93,6 @@ function saveCartToCookie() {
   var cartJSON = JSON.stringify(cartItems);
   //document.cookie = "shoppingCart=" + cartJSON + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/"; /* cross-site scripting (xss) secure */
   document.cookie = "shoppingCart=" + cartJSON + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/; secure"; /* cross-site scripting (xss) */
-
 }
 
 function loadCartFromCookie() {

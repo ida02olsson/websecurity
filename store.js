@@ -1,3 +1,4 @@
+import { hashValue } from './signup.js';
 
 // Using an object to store the quantity of each item in the cart
 var cartItems = {};
@@ -138,6 +139,10 @@ function generateReceiptContent() {
 
   var currentTime = new Date().toLocaleString();
   receiptContent += `<p>Time: ${currentTime}</p>`;
+
+  receiptContent += `<p>Personalised hash: ${hashValue(currentTime).then(console.log)}</p>`; // detta funkar inte just nu tillsammans med importsatsen högst upp
+  // kommentera bort de två raderna så ska programmet fungera
+  receiptContent += '<p>Thank you for shopping with Cool Rings Company(TM)!</p>';
 
   receiptContent += '</body></html>';
 

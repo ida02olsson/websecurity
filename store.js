@@ -61,7 +61,7 @@ function updateCartDisplay() {
   // Display total cost
   totalCostElement.textContent = totalCost + 'kr';
 }
-  module.exports = updateCartDisplay;
+  export default updateCartDisplay;
 
 function createButton(text, item) {
   var button = document.createElement('button');

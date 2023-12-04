@@ -35,7 +35,7 @@ function validate($username, $conn){
     }
     // Return true if user exists, false if not
     return $result >= 1;
-  }
+}
 
   function add_user($username, $address, $password, $reg_date, $conn){
     $sql = "INSERT INTO users (username, address, password, reg_date) VALUES (?, ?, ?, ?);";

@@ -1,12 +1,13 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: lightgray;
+    background-color: rgb(64, 146, 117);
 }
 
 .container {
     max-width: 600px;
     margin: 50px auto;
     text-align: center;
+    border: 1px solid #ffffff;
 }
 
 form {

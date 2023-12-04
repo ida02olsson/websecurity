@@ -1,4 +1,18 @@
-import { hashValue } from './signup.js';
+// // Print username
+// document.addEventListener("DOMContentLoaded", function () {
+//   // Your code to retrieve and display the cookie here
+//   const username = getCookie("username");
+//   document.getElementById("response").innerHTML = "Logged in: " + username;
+//   console.log(document.cookie);
+// });
+
+// // Get cookie
+// function getCookie(name) {
+//   const value = `; ${document.cookie}`;
+//   const parts = value.split(`; ${name}=`);
+//   if (parts.length === 2) return parts.pop().split(';').shift();
+// }
+
 
 // Using an object to store the quantity of each item in the cart
 var cartItems = {};
@@ -105,16 +119,20 @@ function loadCartFromCookie() {
 }
 
 function pay() {
-  var receiptContent = generateReceiptContent();
-  var receiptTab = window.open();
-  receiptTab.document.write(receiptContent);
-
-  cartItems = {};
-  updateCartDisplay();
-  saveCartToCookie();
+  var currentTime = new Date().toLocaleString();
+  hashValue(currentTime).then(updateReceipt);
+  function updateReceipt(hash) {
+    var receiptContent = generateReceiptContent(hash);
+    var receiptTab = window.open();
+    receiptTab.document.write(receiptContent);
+  
+    cartItems = {};
+    updateCartDisplay();
+    saveCartToCookie();
+  }
 }
 
-function generateReceiptContent() {
+function generateReceiptContent(hash) {
   var receiptContent = '<html><head><title>Receipt</title></head><body>';
 
   receiptContent += '<h1>Cool Rings Company</h1>';
@@ -140,7 +158,7 @@ function generateReceiptContent() {
   var currentTime = new Date().toLocaleString();
   receiptContent += `<p>Time: ${currentTime}</p>`;
 
-  receiptContent += `<p>Personalised hash: ${hashValue(currentTime).then(console.log)}</p>`; // detta funkar inte just nu tillsammans med importsatsen högst upp
+  receiptContent += `<p>Personalised hash: ${hash}</p>`; // detta funkar inte just nu tillsammans med importsatsen högst upp
   // kommentera bort de två raderna så ska programmet fungera
   receiptContent += '<p>Thank you for shopping with Cool Rings Company(TM)!</p>';
   
@@ -150,3 +168,13 @@ function generateReceiptContent() {
 
   return receiptContent;
 }
+const hashValue = val =>
+crypto.subtle
+  .digest('SHA-256', new TextEncoder('utf-8').encode(val))
+  .then(h => {
+    let hexes = [],
+      view = new DataView(h);
+    for (let i = 0; i < view.byteLength; i += 4)
+      hexes.push(('00000000' + view.getUint32(i).toString(16)).slice(-8));
+    return hexes.join('');
+  });

@@ -13,11 +13,9 @@ function get_user_data($username, $conn){
     if(!$conn){
         echo "Connection fail";
     } else {
-        // Updated SQL query to select all columns
         $sql = "SELECT * FROM users WHERE username='" . $username . "'";
         if ($conn->multi_query($sql)) {
             do {
-                // Process the result set
                 if ($result = $conn->store_result()) {
                     while ($row = $result->fetch_assoc()) {
                         $results[] = $row;

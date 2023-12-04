@@ -10,24 +10,22 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $con = new dbconn();
     $conn = $con->dbcon();
 
-    // Validate the data
+    // Hash the password
 
     // Check the hash of the passwords match
-    $sql = "SELECT password FROM users where username=" + $username + " AND password=" + $password + ";";
-    $hash = $conn->query($sql);
-    // $hash = "";
-    // if($stmt = $conn->prepare($sql)) {
-    //   // $stmt->bind_param("s", $username);
-    //   $stmt->execute();
-    //   $stmt->bind_result($hash);
-    //   $stmt->fetch();
-    //   $stmt->close();
-    // }
-
-    if($hash == $password){
-        echo "Login successful";
+    $sql = "SELECT password FROM users where username='" . $username . "';";
+    // $sql = "SELECT password FROM users where username='" . $username . "'";
+    $hash = "";
+    if($stmt = $conn->prepare($sql)) {
+      $stmt->execute();
+      $stmt->bind_result($hash);
+      $stmt->fetch();
+      $stmt->close();
+    }
+    if(password_verify($password, $hash)){
+        echo "Login successful for user: $username\n";
     } else {
-        echo "Wrong password or username it was " + $hash;
+        echo "Wrong password or username it was $hash";
     }
 }
 ?>

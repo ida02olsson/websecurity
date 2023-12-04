@@ -33,11 +33,20 @@ function login(username, reg_date, password) {
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 document.getElementById("response").innerHTML = xhr.responseText;
-                if(xhr.responseText == "Login successful"){
+                if(xhr.responseText.startsWith("Login successful")){
                     
                     // Set cookie to username
                     document.cookie = "username=" + username;
+
+                    // Move to store
                     window.location.href = "store.html";
+                }else{
+                    // Check if too many attempts
+                    attempts++;
+                    if(attempts == 3){
+                        alert("Too many attempts, please try again later");
+                        window.location.href = "signup.html";
+                    }
                 }
             }
         };

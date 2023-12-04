@@ -19,6 +19,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         return;
     }
 
+    # Hash the password using argon2id
+    $password = password_hash($password, PASSWORD_ARGON2ID);
+    
     // Add the user to the database
     add_user($username, $address, $password, $reg_date, $conn);
 }

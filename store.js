@@ -13,6 +13,7 @@ function getCookie(name) {
   if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+import { hashValue } from './signup.js';
 
 // Using an object to store the quantity of each item in the cart
 var cartItems = {};
@@ -105,7 +106,9 @@ function createButton(text, item) {
 
 function saveCartToCookie() {
   var cartJSON = JSON.stringify(cartItems);
-  document.cookie = "shoppingCart=" + cartJSON + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
+  document.cookie = "shoppingCart=" + cartJSON + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/"; /* cross-site scripting (xss) secure */
+  //document.cookie = "shoppingCart=" + cartJSON + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/; secure"; /* cross-site scripting (xss) */
+
 }
 
 function loadCartFromCookie() {
@@ -134,12 +137,13 @@ function generateReceiptContent() {
   receiptContent += '<ul>';
 
   for (var item in cartItems) {
-    var itemName = item.replace(/_/g, ' ');
+    var itemName = item.replace(/_/g, ' '); /* cross-site scripting (xss) secure */
     var itemQuantity = cartItems[item];
     var itemPrice = itemPrices[item];
     var itemTotal = itemQuantity * itemPrice;
 
-    receiptContent += `<li>${itemName}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`;
+    receiptContent += `<li>${itemName}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`; /* cross-site scripting (xss) secure */
+    //receiptContent += `<li>${item}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`; /* cross-site scripting (xss) */
   }
 
   receiptContent += '</ul>';
@@ -150,6 +154,12 @@ function generateReceiptContent() {
 
   var currentTime = new Date().toLocaleString();
   receiptContent += `<p>Time: ${currentTime}</p>`;
+
+  receiptContent += `<p>Personalised hash: ${hashValue(currentTime).then(console.log)}</p>`; // detta funkar inte just nu tillsammans med importsatsen högst upp
+  // kommentera bort de två raderna så ska programmet fungera
+  receiptContent += '<p>Thank you for shopping with Cool Rings Company(TM)!</p>';
+  
+  receiptContent += `<h4>Wallet address: rVkttq7tXaYiE6ApXkui5CZVM6SIYzHCNjU7ft3ONUP0t80</h4>`;
 
   receiptContent += '</body></html>';
 

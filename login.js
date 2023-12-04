@@ -1,5 +1,5 @@
 function submitForm() {
-    var name = document.getElementById("name").value;
+    var name = document.getElementById("username").value;
     
     // Send data to server.php using AJAX
     var xhr = new XMLHttpRequest();

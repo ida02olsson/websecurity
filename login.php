@@ -2,6 +2,19 @@
 
 require_once 'dbconn.php';
 
+function generateCSRFToken() {
+    return bin2hex(random_bytes(32)); // Adjust the token length as needed
+}
+
+session_start();
+
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = generateCSRFToken();
+}
+
+$csrfToken = $_SESSION['csrf_token'];
+
+
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $username = $_GET['username'];
     $password = $_GET['password'];

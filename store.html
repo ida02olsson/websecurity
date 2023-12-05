@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Store</title>
     <link rel="stylesheet" href="store.css">
+    <script type="text/javascript" src="DOMPurify-3.0.6/dist/purify.min.js"></script>
     <script src="store.js"></script>
 </head>
 
@@ -108,6 +109,25 @@
     font-size: 16px; 
     margin: 4px 2px; 
     cursor: pointer;">Pay</button>
+
+    <div class="CreateReview">
+        <h3>Reviews</h3>
+        <h4>We would be glad to hear your input! Please do not hack us with un XSS attack!</h4>
+        <form id="review-form">
+            <label for="name">Name:</label>
+            <span id="name"><script>document.write(document.cookie.split('=')[1])</script></span>
+            <label for="review">Review:</label>
+            <input type="text" id="review" name="review" required>
+            <button type="button" onclick="submitReview()">Submit</button>
+        </form>
+    </div>
+
+    <div class="reviews">
+        <ul id="reviews"></ul>
+        
+    </div>
+
+
 
 
 </div>

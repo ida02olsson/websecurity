@@ -11,7 +11,8 @@
 </head>
 
 <body>
-    <div id="response"></div>
+    <div class="user-data" id="response"></div>
+    <button class="user-data" type="button" onclick="logout()">Logout</button>
     <h1>Cool Rings company</h1>
 
     <h2>Rings with cool colors</h2>
@@ -115,10 +116,15 @@
         <h4>We would be glad to hear your input! Please do not hack us with un XSS attack!</h4>
         <form id="review-form">
             <label for="name">Name:</label>
-            <span id="name"><script>document.write(document.cookie.split('=')[1])</script></span>
+            <span id="name"><script>document.write(getCookie("username"))</script></span>
             <label for="review">Review:</label>
             <input type="text" id="review" name="review" required>
             <button type="button" onclick="submitReview()">Submit</button>
+        </form>
+        <form id="review-search">
+            <label for="name">Search for reviews:</label>
+            <input type="text" id="search" name="search-field" required>
+            <button type="button" onclick="searchReviews()">Search</button>
         </form>
     </div>
 

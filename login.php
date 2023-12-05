@@ -8,12 +8,6 @@ function generateCSRFToken() {
 
 session_start();
 
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = generateCSRFToken();
-}
-
-$csrfToken = $_SESSION['csrf_token'];
-
 
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $username = $_GET['username'];
@@ -22,23 +16,36 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     // Set up the database connection 
     $con = new dbconn();
     $conn = $con->dbcon();
+    $response = ['success' => false];
 
-    // Hash the password
+    // Set the header to JSON
+    header('Content-Type: application/json');
 
     // Check the hash of the passwords match
-    $sql = "SELECT password FROM users where username='" . $username . "';";
-    // $sql = "SELECT password FROM users where username='" . $username . "'";
+    $sql = "SELECT password FROM users where username=?;";
     $hash = "";
     if($stmt = $conn->prepare($sql)) {
+      $stmt->bind_param("s", $username);
       $stmt->execute();
       $stmt->bind_result($hash);
       $stmt->fetch();
       $stmt->close();
     }
     if(password_verify($password, $hash)){
-        echo "Login successful for user: $username\n";
+        $_SESSION['username'] = $username;
+        $_SESSION['user_logged_in'] = true;
+        if (!isset($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = generateCSRFToken();
+        }
+        $response['success'] = true;
+        $response['csrfToken'] = $_SESSION['csrf_token'] ?? null;
+        $response['username'] = $_SESSION['username'] ?? null;
+        $repsonse['message'] = 'Login successful';
     } else {
-        echo "Wrong password or username it was $hash";
+        $response['message'] = 'Wrong password or username';
+
     }
+
+    echo json_encode($response);
 }
 ?>

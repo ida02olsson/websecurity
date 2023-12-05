@@ -23,11 +23,11 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
 }
 
 function get_reg_date($username, $conn){
-    $sql = "SELECT reg_date FROM users WHERE username='" . $username . "';";
+    $sql = "SELECT reg_date FROM users WHERE username=?;";
     // $reg_date = $conn.query($sql);
     $reg_date = 0;
     if($stmt = $conn->prepare($sql)) {
-      // $stmt->bind_param("s", $username);
+      $stmt->bind_param("s", $username);
       $stmt->execute();
       $stmt->bind_result($reg_date);
       $stmt->fetch();
@@ -38,10 +38,10 @@ function get_reg_date($username, $conn){
 }
 
 function validate($username, $conn){
-    $sql = "SELECT COUNT(*) FROM users WHERE username='" . $username . "';";
+    $sql = "SELECT COUNT(*) FROM users WHERE username=?;";
     $result = 0;
     if($stmt = $conn->prepare($sql)) {
-      // $stmt->bind_param("s", $username);
+      $stmt->bind_param("s", $username);
       $stmt->execute();
       $stmt->bind_result($result);
       $stmt->fetch();

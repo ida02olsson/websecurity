@@ -1,4 +1,4 @@
-// Print username
+// Add the username to the website
 document.addEventListener("DOMContentLoaded", function () {
   // Your code to retrieve and display the cookie here
   const username = getCookie("username");
@@ -11,6 +11,25 @@ function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+function logout() {
+  // Remove cookie
+  document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  // Send request to server to logout
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "logout.php", true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      var response = JSON.parse(xhr.responseText);
+      if (response["success"]) {
+        window.location.href = "index.html";
+      }
+      console.log(xhr.responseText);
+    }
+  };
+  xhr.send(null);
+  
 }
 
 // Using an object to store the quantity of each item in the cart
@@ -189,7 +208,7 @@ function submitReview() {
       getReviews();
     }
   };
-  xhr.send("username=" + getCookie("username") + "&review=" + review);
+  xhr.send("username=" + getCookie("username") + "&review=" + review + "&csrf_token=" + getCookie("csrfToken"));
 }
 
 function getReviews() {
@@ -202,5 +221,23 @@ function getReviews() {
       console.log("xhr=" + xhr.responseText);
     }
   };
+  xhr.send(null);
+}
+
+function searchReviews(){
+
+  var searchValue = document.getElementById("search").value;
+  console.log(searchValue);
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "search_reviews.php?search=" + searchValue, true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      document.getElementById("reviews").innerHTML = xhr.responseText;
+      console.log("xhr=" + xhr.responseText);
+    }
+  };
+  
   xhr.send(null);
 }

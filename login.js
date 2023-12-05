@@ -1,3 +1,20 @@
+// Check if the user is logged in by sending a request to the server with the session cookie.
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM fully loaded and parsed");
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "check_login.php", true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var response = JSON.parse(xhr.responseText);
+            console.log(xhr.responseText);
+            response["csrfToken"] ? document.cookie = "csrfToken=" + response["csrfToken"] + "; Secure; SameSite=Strict" : null;
+            response["isLoggedIn"] ? window.location.href = "store.html" : null;
+            document.cookie = "username=" + response["username"] + "; Secure; SameSite=Strict";
+        }
+    };
+    xhr.send(null);
+  });
+
 var attempts = 0;
 function submitForm() {
     var username = document.getElementById("username").value;
@@ -29,21 +46,30 @@ function login(username, reg_date, password) {
         // Send data to server.php using AJAX
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "login.php?username=" + username + "&password=" + securePassword, true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
-                document.getElementById("response").innerHTML = xhr.responseText;
-                if(xhr.responseText.startsWith("Login successful")){
+                var response = JSON.parse(xhr.responseText);
+                document.getElementById("response").innerHTML = response["message"];
+                if(response["success"]){
                     
                     // Set cookie to username
-                    document.cookie = "username=" + username;
-
+                    document.cookie = "username=" + response["username"] + "; Secure; SameSite=Strict";
+                    document.cookie = "csrfToken=" + response["csrfToken"] + "; Secure; SameSite=Strict";
                     // Move to store
                     window.location.href = "store.html";
                 }else{
-                    // Check if too many attempts
+                    // Get attempts from cookie
+                    var cookie = document.cookie;
+                    var cookieArray = cookie.split(";");
+                    for(var i = 0; i < cookieArray.length; i++){
+                        var cookie = cookieArray[i].split("=");
+                        if(cookie[0].trim() == "attempts"){
+                            attempts = cookie[1];
+                        }
+                    }
                     attempts++;
-                    if(attempts == 3){
+                    document.cookie = "attempts=" + attempts + ";max-age=30";
+                    if(attempts > 3){
                         alert("Too many attempts, please try again later");
                         window.location.href = "signup.html";
                     }

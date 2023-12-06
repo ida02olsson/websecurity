@@ -2,7 +2,7 @@ package simpleBlockchain
 
 import "encoding/json"
 
-const coinbaseReward = 5000000000
+const coinbaseReward = 500
 
 type TxOut struct {
 	Value int			`json:"value"`

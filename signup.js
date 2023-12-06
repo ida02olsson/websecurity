@@ -30,8 +30,11 @@ function signup() {
         return;
     }
 
+
     console.log(password + register_date);
     var securePassword = hashValue(password + register_date).then(sendToServer);
+
+
 }
 
 function sendToServer(securePassword) {
@@ -43,6 +46,10 @@ function sendToServer(securePassword) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             document.getElementById("response").innerHTML = xhr.responseText;
+            console.log(xhr.responseText);
+            if(xhr.responseText.startsWith("Signup successful")){
+                window.location.href = "index.html";
+            }
         }
     };
     console.log("username=" + username);

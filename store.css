@@ -24,9 +24,21 @@
   align-items: center;
 }
 
+body {
+  font-family: Arial, sans-serif;
+  background-color: rgb(246, 118, 118);
+}
+
 
 .whole {
   background-color: red;
   background-image: linear-gradient(to bottom right, rgb(246, 118, 118), rgb(236, 255, 63), rgb(168, 68, 239));
 }
 
+#response {
+  text-align: right;
+}
+
+#left {
+  text-align: left;
+}

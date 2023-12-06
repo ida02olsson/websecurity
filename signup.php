@@ -19,8 +19,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         return;
     }
 
+    # Hash the password using argon2id
+    $password = password_hash($password, PASSWORD_ARGON2ID);
+    
     // Add the user to the database
     add_user($username, $address, $password, $reg_date, $conn);
+<<<<<<< HEAD
+    
+=======
+    echo "Signup successfull!";
+>>>>>>> 9a52f494846ca46018f10961e1b607446a74bd28
 }
 
 function validate($username, $conn){
@@ -35,7 +43,7 @@ function validate($username, $conn){
     }
     // Return true if user exists, false if not
     return $result >= 1;
-  }
+}
 
   function add_user($username, $address, $password, $reg_date, $conn){
     $sql = "INSERT INTO users (username, address, password, reg_date) VALUES (?, ?, ?, ?);";

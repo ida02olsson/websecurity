@@ -24,18 +24,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     // Add the user to the database
     add_user($username, $address, $password, $reg_date, $conn);
-<<<<<<< HEAD
-    
-=======
     echo "Signup successfull!";
->>>>>>> 9a52f494846ca46018f10961e1b607446a74bd28
 }
 
 function validate($username, $conn){
-    $sql = "SELECT COUNT(*) FROM users where username=?;";
+    $sql = "SELECT COUNT(*) FROM users where username='" . $username ."';";
     $result = 0;
     if($stmt = $conn->prepare($sql)) {
-      $stmt->bind_param("s", $username);
       $stmt->execute();
       $stmt->bind_result($result);
       $stmt->fetch();
@@ -46,9 +41,9 @@ function validate($username, $conn){
 }
 
   function add_user($username, $address, $password, $reg_date, $conn){
-    $sql = "INSERT INTO users (username, address, password, reg_date) VALUES (?, ?, ?, ?);";
+    $sql = "INSERT INTO users (username, address, password, reg_date) VALUES ('" . $username . "', '" . $address ."', '" . $password ."', '" . $reg_date . "');";
     if($stmt = $conn->prepare($sql)) {
-      $stmt->bind_param("ssss", $username, $address, $password, $reg_date);
+      // $stmt->bind_param("ssss", $username, $address, $password, $reg_date);
       $stmt->execute();
       $stmt->close();
     }

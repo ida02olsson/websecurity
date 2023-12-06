@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
 }
 
 function get_reg_date($username, $conn){
-    $sql = "SELECT reg_date FROM users WHERE username=?;";
+    $sql = "SELECT reg_date FROM users WHERE username='" . $username . "';";
     // $reg_date = $conn.query($sql);
     $reg_date = 0;
     if($stmt = $conn->prepare($sql)) {
@@ -38,7 +38,7 @@ function get_reg_date($username, $conn){
 }
 
 function validate($username, $conn){
-    $sql = "SELECT COUNT(*) FROM users WHERE username=?;";
+    $sql = "SELECT COUNT(*) FROM users WHERE username='" . $username . "';";
     $result = 0;
     if($stmt = $conn->prepare($sql)) {
       $stmt->bind_param("s", $username);

@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     header('Content-Type: application/json');
 
     // Check the hash of the passwords match
-    $sql = "SELECT password FROM users where username=?;";
+    $sql = "SELECT password FROM users where username='" . $username . "';";
     $hash = "";
     if($stmt = $conn->prepare($sql)) {
       $stmt->bind_param("s", $username);

@@ -8,11 +8,10 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $con = new dbconn();
     $conn = $con->dbcon();
     $search = "%" . $search . "%";
-    $sql = "SELECT * FROM reviews WHERE review LIKE ?;";
+    $sql = "SELECT * FROM reviews WHERE review LIKE '" . $search . "';";
     // SELECT * FROM reviews WHERE review like '%T%' UNION SELECT 0, username, password FROM users WHERE '1%'='1;
     // Vulnerable to query of "' OR '1'='1' UNION SELECT 0, username, password FROM users WHERE '1'='1"
     if($stmt = $conn->prepare($sql)) {
-      $stmt->bind_param("s", $search);
       $stmt->execute();
       $result = $stmt->get_result();
       if ($result->num_rows > 0) {

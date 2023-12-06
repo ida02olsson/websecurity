@@ -21,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Add the user to the database
     add_user($username, $address, $password, $reg_date, $conn);
+    
 }
 
 function validate($username, $conn){

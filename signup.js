@@ -33,8 +33,6 @@ function signup() {
 
     console.log(password + register_date);
     var securePassword = hashValue(password + register_date).then(sendToServer);
-
-
 }
 
 function sendToServer(securePassword) {

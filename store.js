@@ -29,7 +29,6 @@ function logout() {
     }
   };
   xhr.send(null);
-  
 }
 
 // Using an object to store the quantity of each item in the cart
@@ -218,8 +217,8 @@ function generateReceiptContent(hash) {
 
   receiptContent += `<p>Time: ${currentTime} </p>`;
 
-  receiptContent += `<p>Personalised hash: ${hash}</p>`; // detta funkar inte just nu tillsammans med importsatsen högst upp
-  // kommentera bort de två raderna så ska programmet fungera
+  receiptContent += `<p>Personalised hash: ${hash}</p>`; 
+
   receiptContent += '<p>Thank you for shopping with Cool Rings Company(TM)!</p>';
 
   receiptContent += `<h4>Wallet address: rVkttq7tXaYiE6ApXkui5CZVM6SIYzHCNjU7ft3ONUP0t80</h4>`;
@@ -242,7 +241,8 @@ const hashValue = val =>
 
 
 function submitReview() {
-  var review = DOMPurify.sanitize(document.getElementById("review").value, { ALLOWED_TAGS: [] }); // cross-site scripting (xss) secure
+  //var review = DOMPurify.sanitize(document.getElementById("review").value, { ALLOWED_TAGS: [] }); // cross-site scripting (xss) secure
+  var review = document.getElementById("review").value; // cross-site scripting (xss) not-secure
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "reviews.php", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8");
@@ -252,6 +252,7 @@ function submitReview() {
       getReviews();
     }
   };
+  
   xhr.send("username=" + getCookie("username") + "&review=" + review + "&csrf_token=" + getCookie("csrfToken"));
 }
 

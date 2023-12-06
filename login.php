@@ -2,12 +2,11 @@
 
 require_once 'dbconn.php';
 
-function generateCSRFToken() {
-    return bin2hex(random_bytes(32)); // Adjust the token length as needed
-}
+// function generateCSRFToken() {
+//     return bin2hex(random_bytes(32)); // Adjust the token length as needed
+// }
 
 session_start();
-
 
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $username = $_GET['username'];
@@ -34,11 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     if(password_verify($password, $hash)){
         $_SESSION['username'] = $username;
         $_SESSION['user_logged_in'] = true;
-        if (!isset($_SESSION['csrf_token'])) {
-            $_SESSION['csrf_token'] = generateCSRFToken();
-        }
+        // if (!isset($_SESSION['csrf_token'])) {
+        //     $_SESSION['csrf_token'] = generateCSRFToken();
+        // }
         $response['success'] = true;
-        $response['csrfToken'] = $_SESSION['csrf_token'] ?? null;
+        // $response['csrfToken'] = $_SESSION['csrf_token'] ?? null;
         $response['username'] = $_SESSION['username'] ?? null;
         $repsonse['message'] = 'Login successful';
     } else {

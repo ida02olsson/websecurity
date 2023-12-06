@@ -7,7 +7,9 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $search = $_GET['search'];
     $con = new dbconn();
     $conn = $con->dbcon();
-    $sql = "SELECT * FROM reviews WHERE username=?;";
+    $search = "%" . $search . "%";
+    $sql = "SELECT * FROM reviews WHERE review LIKE ?;";
+    // SELECT * FROM reviews WHERE review like '%T%' UNION SELECT 0, username, password FROM users WHERE '1%'='1;
     // Vulnerable to query of "' OR '1'='1' UNION SELECT 0, username, password FROM users WHERE '1'='1"
     if($stmt = $conn->prepare($sql)) {
       $stmt->bind_param("s", $search);

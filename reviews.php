@@ -23,20 +23,20 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = $_POST["username"];
     $review = $_POST["review"];
-    $csrf_token = $_SESSION['csrf_token'];
-    $get_token = $_POST['csrf_token'];
+    // $csrf_token = $_SESSION['csrf_token'];
+    // $get_token = $_POST['csrf_token'];
 
     // Validate the data
     $db = new dbconn();
     $con = new dbconn();
     $conn = $con->dbcon();
-    if ($csrf_token != $get_token) {
-        echo "CSRF token mismatch";
-        return;
-    }
+    // if ($csrf_token != $get_token) {
+    //     echo "CSRF token mismatch";
+    //     return;
+    // }
     // Add review to the database
     add_review($username, $review, $conn);
-    echo $csrf_token . " " . $get_token;
+    // echo $csrf_token . " " . $get_token;
     echo "Reviewed successfully!";
 }
 

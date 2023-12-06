@@ -137,8 +137,7 @@ function confirmPayment() {
   var confirmation = '<html><head><title>Confirmation</title><script src="store.js"></script></head><body>';
   confirmation += '<h1>Confirm payment</h1>';
   confirmation += '<h3>Send money to address: Qy2MEFpYaEfkyNb06zwdU</h3>';
-  confirmation += `<input type="text" placeholder="Enter your wallet address" id="walletAddress">`;
-  confirmation += `<input type="text" placeholder="Enter your private key" id="privateKey">`;
+  confirmation += `<input type="text" placeholder="Enter TransactionID" id="TransID">`;
 
   // Assuming you have an element with the id 'totalCost'
   var totalCostElement = document.getElementById('totalCost');
@@ -146,30 +145,12 @@ function confirmPayment() {
   confirmation += `<h3>Amount being sent: ${totalCost}kr </h3>`;
 
   for (var item in cartItems) {
-    console.log("test");
-    cartItems = {};
-    updateCartDisplay();
-    saveCartToCookie();
-  }
-}
-
-function generateReceiptContent(hash) {
-  var receiptContent = '<html><head><title>Receipt</title></head><body>';
-
-  receiptContent += '<h1>Cool Rings Company</h1>';
-  receiptContent += '<h3>Receipt</h3>';
-  receiptContent += '<ul>';
-
-  for (var item in cartItems) {
     var itemName = item.replace(/_/g, ' '); /* cross-site scripting (xss) secure */
     var itemQuantity = cartItems[item];
     var itemPrice = itemPrices[item];
     var itemTotal = itemQuantity * itemPrice;
 
-    //receiptContent += `<li>${itemName}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`; /* cross-site scripting (xss) secure */
     confirmation += `<li>${item}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`; /* cross-site scripting (xss) */
-    receiptContent += `<li>${itemName}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`; /* cross-site scripting (xss) secure */
-    //receiptContent += `<li>${item}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`; /* cross-site scripting (xss) */
   }
 
   confirmation += `<button id="confirmPay" onclick="handleConfirmation()">Confirm payment</button>`;
@@ -177,22 +158,24 @@ function generateReceiptContent(hash) {
   var confirmationTab = window.open();
   confirmationTab.document.write(confirmation);
 
-  // Define the function that will handle the confirmation logic
-  
-
-  // Attach the handleConfirmation function to the button's click event
-  var confirmPayButton = confirmationTab.document.getElementById('confirmPay');
-  confirmPayButton.onclick = handleConfirmation();
+  //var confirmPayButton = confirmationTab.document.getElementById('confirmPay');
+  //confirmPayButton.onclick = handleConfirmation();
 
   confirmation += '</body></html>';
+
+  /*for (var item in cartItems) {
+    console.log("test");
+    cartItems = {};
+    updateCartDisplay();
+    saveCartToCookie();
+  }*/
 }
 
 
 function handleConfirmation() {
-  var walletAddress = document.getElementById('walletAddress').value;
-  var privateKey = document.getElementById('privateKey').value;
+  var TransID = document.getElementById('TransID').value;
 
-  if (walletAddress.trim() !== '' && privateKey.trim() !== '') {
+  if (TransID.trim() !== '') {
     pay()
    
   } else {
@@ -201,8 +184,7 @@ function handleConfirmation() {
 }
 
 
-
-function generateReceiptContent() {
+function generateReceiptContent(hash) {
   var receiptContent = '<html><head><title>Receipt</title></head><body>';
 
   receiptContent += '<h1>Cool Rings Company</h1>';

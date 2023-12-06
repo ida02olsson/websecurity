@@ -143,18 +143,25 @@ function pay() {
     var receiptTab = window.open();
     receiptTab.document.write(receiptContent);
 
-    cartItems = {};
-    updateCartDisplay();
-    saveCartToCookie();
+  cartItems = {};
+  updateCartDisplay();
+  saveCartToCookie();
   }
 }
 
-function generateReceiptContent(hash) {
-  var receiptContent = '<html><head><title>Receipt</title></head><body>';
+function confirmPayment() {
+  var itemQuantity = {};
+  var itemPrice = {};
+  var itemTotal = {};
+  var confirmation = '<html><head><title>Confirmation</title><script src="store.js"></script></head><body>';
+  confirmation += '<h1>Confirm payment</h1>';
+  confirmation += '<h3>Send money to address: Qy2MEFpYaEfkyNb06zwdU</h3>';
+  confirmation += `<input type="text" placeholder="Enter TransactionID" id="TransID">`;
 
-  receiptContent += '<h1>Cool Rings Company</h1>';
-  receiptContent += '<h3>Receipt</h3>';
-  receiptContent += '<ul>';
+  // Assuming you have an element with the id 'totalCost'
+  var totalCostElement = document.getElementById('totalCost');
+  var totalCost = parseInt(totalCostElement.textContent) || 0; // Default to 0 if element not found
+  confirmation += `<h3>Amount being sent: ${totalCost}kr </h3>`;
 
   for (var item in cartItems) {
     var itemName = item.replace(/_/g, ' '); /* cross-site scripting (xss) secure */
@@ -162,18 +169,54 @@ function generateReceiptContent(hash) {
     var itemPrice = itemPrices[item];
     var itemTotal = itemQuantity * itemPrice;
 
-    receiptContent += `<li>${itemName}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`; /* cross-site scripting (xss) secure */
-    //receiptContent += `<li>${item}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`; /* cross-site scripting (xss) */
+    confirmation += `<li>${item}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`; /* cross-site scripting (xss) */
   }
 
+  confirmation += `<button id="confirmPay" onclick="handleConfirmation()">Confirm payment</button>`;
+
+  var confirmationTab = window.open();
+  confirmationTab.document.write(confirmation);
+
+  //var confirmPayButton = confirmationTab.document.getElementById('confirmPay');
+  //confirmPayButton.onclick = handleConfirmation();
+
+  confirmation += '</body></html>';
+
+  /*for (var item in cartItems) {
+    console.log("test");
+    cartItems = {};
+    updateCartDisplay();
+    saveCartToCookie();
+  }*/
+}
+
+
+function handleConfirmation() {
+  var TransID = document.getElementById('TransID').value;
+
+  if (TransID.trim() !== '') {
+    pay()
+   
+  } else {
+    alert('Please enter your wallet address and private key');
+  } 
+}
+
+
+function generateReceiptContent(hash) {
+  var receiptContent = '<html><head><title>Receipt</title></head><body>';
+
+  receiptContent += '<h1>Cool Rings Company</h1>';
+  receiptContent += '<h3>Receipt</h3>';
+  receiptContent += '<ul>';
   receiptContent += '</ul>';
 
-  var totalCostElement = document.getElementById('totalCost');
-  var totalCost = parseInt(totalCostElement.textContent);
-  receiptContent += `<h4>Total Cost: ${totalCost}kr</h4>`;
+  //var totalCost = parseInt(totalCostElement.textContent);
+  receiptContent += `<h4>Total Cost: 100kr</h4>`;
 
   var currentTime = new Date().toLocaleString();
-  receiptContent += `<p>Time: ${currentTime}</p>`;
+
+  receiptContent += `<p>Time: ${currentTime} </p>`;
 
   receiptContent += `<p>Personalised hash: ${hash}</p>`; // detta funkar inte just nu tillsammans med importsatsen högst upp
   // kommentera bort de två raderna så ska programmet fungera
@@ -185,6 +228,7 @@ function generateReceiptContent(hash) {
 
   return receiptContent;
 }
+
 const hashValue = val =>
   crypto.subtle
     .digest('SHA-256', new TextEncoder('utf-8').encode(val))

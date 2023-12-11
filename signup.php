@@ -24,11 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     // Add the user to the database
     add_user($username, $address, $password, $reg_date, $conn);
-<<<<<<< HEAD
-    
-=======
     echo "Signup successfull!";
->>>>>>> 9a52f494846ca46018f10961e1b607446a74bd28
 }
 
 function validate($username, $conn){

@@ -44,7 +44,8 @@ var itemPrices = {
 
 // Load cart from cookie when the page loads
 document.addEventListener('DOMContentLoaded', function () {
-  loadCartFromCookie();
+  cartItems = loadCartFromCookie();
+  updateCartDisplay();
 });
 
 function addToCart(productName) {
@@ -131,36 +132,97 @@ function loadCartFromCookie() {
   var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)shoppingCart\s*=\s*([^;]*).*$)|^.*$/, "$1");
   if (cookieValue) {
     cartItems = JSON.parse(cookieValue);
-    updateCartDisplay();
   }
+  return cartItems;
 }
 
-function pay() {
+function getCartPrice() {
+  var totalCost = 0;
+  var cookieValue = document.cookie.replace(/(?:(?:^|.*;\s*)shoppingCart\s*=\s*([^;]*).*$)|^.*$/, "$1");
+  if (cookieValue) {
+    console.log(cookieValue);
+    cartItems = JSON.parse(cookieValue);
+  }
+  for (var item in cartItems) {
+    var itemQuantity = cartItems[item];
+    var itemPrice = itemPrices[item];
+    var itemTotal = itemQuantity * itemPrice;
+    totalCost += itemTotal;
+  }
+  console.log(totalCost);
+  return totalCost;
+}
+
+function pay(totalCost) {
   var currentTime = new Date().toLocaleString();
   hashValue(currentTime).then(updateReceipt);
   function updateReceipt(hash) {
-    var receiptContent = generateReceiptContent(hash);
+    var receiptContent = generateReceiptContent(hash, totalCost);
     var receiptTab = window.open();
     receiptTab.document.write(receiptContent);
 
-  cartItems = {};
+  // cartItems = {};
   updateCartDisplay();
-  saveCartToCookie();
+  // saveCartToCookie();
   }
 }
 
+function getAddress() {
+  xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://localhost/payment/address.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+          document.getElementById("test").innerHTML = xhr.responseText;
+          console.log(xhr.responseText);
+      }
+  };
+
+  xhr.send(null);
+}
+
+function fetchTransactions() {
+  console.log("transactions");
+  xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://localhost/payment/transaction.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+          document.getElementById("test").innerHTML = xhr.responseText;
+          console.log(xhr.responseText);
+      }
+  };
+
+  xhr.send(null);
+}
+
+async function testTransaction(transactionId, cost) {
+  try {
+    const data = await fetchTransactions();
+    if (data && data.result) {
+        return data.result.find(transaction => transaction.txid === txid) || null;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error in finding transaction:', error);
+    return null;
+}
+}
+var totalCost = 0;
 function confirmPayment() {
   var itemQuantity = {};
   var itemPrice = {};
   var itemTotal = {};
-  var confirmation = '<html><head><title>Confirmation</title><script src="store.js"></script></head><body>';
+  var confirmation = '<html><head><title>Confirmation</title><script src="store.js"></script></head><body onload="getAddress()">';
   confirmation += '<h1>Confirm payment</h1>';
-  confirmation += '<h3>Send money to address: Qy2MEFpYaEfkyNb06zwdU</h3>';
+  confirmation += '<script>getAddress()</script>';
+  confirmation += '<h3>Send money to </h3>';
+  confirmation += `<h4 id="test">Wallet address: rVkttq7tXaYiE6ApXkui5CZVM6SIYzHCNjU7ft3ONUP0t80</h4>`;
   confirmation += `<input type="text" placeholder="Enter TransactionID" id="TransID">`;
 
   // Assuming you have an element with the id 'totalCost'
   var totalCostElement = document.getElementById('totalCost');
-  var totalCost = parseInt(totalCostElement.textContent) || 0; // Default to 0 if element not found
+  totalCost = parseInt(totalCostElement.textContent) || 0; // Default to 0 if element not found
   confirmation += `<h3>Amount being sent: ${totalCost}kr </h3>`;
 
   for (var item in cartItems) {
@@ -191,11 +253,15 @@ function confirmPayment() {
 }
 
 
-function handleConfirmation() {
+function handleConfirmation(totalCost) {
   var TransID = document.getElementById('TransID').value;
 
+  console.log("test");
+  console.log(getCartPrice());
+
   if (TransID.trim() !== '') {
-    pay()
+    console.log(totalCost);
+    pay(totalCost)
    
   } else {
     alert('Please enter your wallet address and private key');
@@ -203,8 +269,8 @@ function handleConfirmation() {
 }
 
 
-function generateReceiptContent(hash) {
-  var receiptContent = '<html><head><title>Receipt</title></head><body>';
+function generateReceiptContent(hash, totalCost) {
+  var receiptContent = '<html><head><title>Receipt</title><script src="store.js"></script></head><body>';
 
   receiptContent += '<h1>Cool Rings Company</h1>';
   receiptContent += '<h3>Receipt</h3>';
@@ -212,7 +278,17 @@ function generateReceiptContent(hash) {
   receiptContent += '</ul>';
 
   //var totalCost = parseInt(totalCostElement.textContent);
-  receiptContent += `<h4>Total Cost: 100kr</h4>`;
+  receiptContent += `<h4 >Total Cost: ${getCartPrice()}kr</h4>`;
+
+  var cartItems = loadCartFromCookie();
+  for (var item in cartItems) {
+    var itemName = item.replace(/_/g, ' '); /* cross-site scripting (xss) secure */
+    var itemQuantity = cartItems[item];
+    var itemPrice = itemPrices[item];
+    var itemTotal = itemQuantity * itemPrice;
+
+    receiptContent += `<li>${item}: ${itemQuantity}x ${itemPrice}kr = ${itemTotal}kr</li>`; /* cross-site scripting (xss) */
+  }
 
   var currentTime = new Date().toLocaleString();
 
@@ -222,7 +298,8 @@ function generateReceiptContent(hash) {
   // kommentera bort de två raderna så ska programmet fungera
   receiptContent += '<p>Thank you for shopping with Cool Rings Company(TM)!</p>';
 
-  receiptContent += `<h4>Wallet address: rVkttq7tXaYiE6ApXkui5CZVM6SIYzHCNjU7ft3ONUP0t80</h4>`;
+  receiptContent += `<h4 id="test">Wallet address: rVkttq7tXaYiE6ApXkui5CZVM6SIYzHCNjU7ft3ONUP0t80</h4>`;
+  receiptContent += `<script>getAddress(); getCartPrice();</script>`;
 
   receiptContent += '</body></html>';
 

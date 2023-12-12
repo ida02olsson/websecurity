@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $username = $_POST["username"];
+    $username = $_SESSION["username"];;
     $review = $_POST["review"];
     // $csrf_token = $_SESSION['csrf_token'];
     // $get_token = $_POST['csrf_token'];

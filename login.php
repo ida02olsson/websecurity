@@ -16,7 +16,30 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $con = new dbconn();
     $conn = $con->dbcon();
     $response = ['success' => false];
+    // Set the amount of attempts and the last attempt time
+    if(!isset($_SESSION['attempts'])) {
+        $_SESSION['attempts'] = 0;
+    }
+    if(!isset($_SESSION['last_attempt'])) {
+        $_SESSION['last_attempt'] = time();
+    }
 
+    // Reset the attempts if the last attempt was more than 3 minutes ago
+    if(time() - $_SESSION['last_attempt'] > 180) {
+        $_SESSION['attempts'] = 0;
+    }
+
+    // Otherwise return an error if the user has tried to log in more than 3 times
+    if($_SESSION['attempts'] > 3) {
+        $response['message'] = 'Too many attempts';
+        echo json_encode($response);
+        return;
+    }
+
+    // Update the attempts and the last attempt time
+    $_SESSION['last_attempt'] = time();
+    $_SESSION['attempts'] += 1;
+    
     // Set the header to JSON
     header('Content-Type: application/json');
 
@@ -30,6 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
       $stmt->fetch();
       $stmt->close();
     }
+    // $response['debug'] = $hash . ' ' . $password . ' ' . $username;
     if(password_verify($password, $hash)){
         $_SESSION['username'] = $username;
         $_SESSION['user_logged_in'] = true;

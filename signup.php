@@ -6,7 +6,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = $_POST["username"];
     $address = $_POST["address"];
     $password = $_POST["password"];
-    $reg_date = $_POST["reg_date"];
+
+    $response = ['success' => false];
+    
+    header('Content-Type: application/json');
 
     // Validate the data
     $db = new dbconn();
@@ -15,16 +18,45 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $result = validate($username, $conn);
     if($result == 1){
-        echo "user exists: $username\n";
+        $response['message'] = "Username already exists";
+        echo json_encode($response);
         return;
     }
 
+    if(!check($password, $response, $username, $address, $conn))
+    {
+        return;
+    }
+    
     # Hash the password using argon2id
     $password = password_hash($password, PASSWORD_ARGON2ID);
-    
+    // $response['debug'] = $password . ' ' . $username . ' ' . $address;
     // Add the user to the database
-    add_user($username, $address, $password, $reg_date, $conn);
-    echo "Signup successfull!";
+    add_user($username, $address, $password, $conn);
+    $response['message'] = "Signup successfull!";
+    $response['success'] = true;
+    echo json_encode($response);
+}
+
+function check($password, $response, $username, $address, $conn){
+    if(strlen($password) < 8){
+        $response['message'] = "Password must be at least 8 characters long";
+        echo json_encode($response);
+        return false;
+    }
+    if(strlen($username) < 1){
+        $response['message'] = "Username must be at least 1 characters long";
+        echo json_encode($response);
+        return false;
+    }
+    $pattern = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/';
+
+    if (!preg_match($pattern, $password)) {
+        $response['message'] = "Password must contain at least one uppercase letter, one lowercase letter, and one digit.";
+        echo json_encode($response);
+        return false;
+    }
+    return true;
 }
 
 function validate($username, $conn){
@@ -40,7 +72,8 @@ function validate($username, $conn){
     return $result >= 1;
 }
 
-  function add_user($username, $address, $password, $reg_date, $conn){
+  function add_user($username, $address, $password, $conn){
+    $reg_date = date("Y-m-d H:i:s");
     $sql = "INSERT INTO users (username, address, password, reg_date) VALUES ('" . $username . "', '" . $address ."', '" . $password ."', '" . $reg_date . "');";
     if($stmt = $conn->prepare($sql)) {
       // $stmt->bind_param("ssss", $username, $address, $password, $reg_date);

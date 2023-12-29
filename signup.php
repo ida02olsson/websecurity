@@ -56,6 +56,13 @@ function check($password, $response, $username, $address, $conn){
         echo json_encode($response);
         return false;
     }
+
+    $bad_passwords = ['qwerty123', 'zaq12wsx', '1q2w3e4r', 'mamma123', 'hejsan123', 'abcd1234', 'sommar123', 'hejhej123'];
+    if(in_array($password, $bad_passwords)){
+        $response['message'] = "Password is too weak";
+        echo json_encode($response);
+        return false;
+    }
     return true;
 }
 
